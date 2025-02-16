@@ -1,0 +1,69 @@
+﻿@model SV21T1020123.DomainModels.Customer
+@{
+    ViewBag.Title = "Thay đổi thông tin";
+}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-6">
+        <form action="~/Account/Edit" method="post" class="shadow p-4 bg-white rounded mt-5 mb-5">
+            <h4 class="d-flex justify-content-center align-items-center">Thay đổi thông tin cá nhân</h4>
+            <input type="text" hidden name="@nameof(Model.CustomerID)" value="@Model.CustomerID">
+
+            <div class="form-group">
+                <label><strong>Tên khách hàng:</strong></label>
+                <input type="text" autofocus class="form-control" name="@nameof(Model.CustomerName)" value="@Model.CustomerName" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.CustomerName))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Tên giao dịch:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.ContactName)" value="@Model.ContactName" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.ContactName))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Điện thoại:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.Phone)" value="@Model.Phone" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Phone))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Email:</strong></label>
+                <input type="email" class="form-control" name="@nameof(Model.Email)" value="@Model.Email" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Email))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Địa chỉ:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.Address)" value="@Model.Address" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Address))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Tỉnh/thành:</strong></label>
+                <select class="form-control" name="@nameof(Model.Province)">
+                    <option value="">---Chọn tỉnh thành---</option>
+                    @foreach (var province in SV21T1020123.BusinessLayers.CommonDataService.ListofProvinces())
+                    {
+                        if (province.ProvinceName == Model.Province)
+                        {
+                            <option selected="selected" value="@province.ProvinceName">@province.ProvinceName</option>
+                        }
+                        else
+                        {
+                            <option value="@province.ProvinceName">@province.ProvinceName</option>
+                        }
+                    }
+                </select>
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Province))</span>
+            </div>
+
+            <div class="form-group text-left">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i> <strong>Lưu dữ liệu</strong>
+                </button>
+                <a href="~/Home" class="btn btn-default"> Quay lại</a>
+            </div>
+            <span style="color: red">@Html.ValidationMessage("Error")</span>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,174 @@
+﻿@model List<CartItem>
+@{
+    ViewBag.Title = "Giỏ hàng";
+}
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <span class="breadcrumb-item active"><b>@ViewBag.Title</b></span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Cart Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class=" col-lg-8 table-responsive mb-5">
+            <table class="table table-light table-borderless table-hover text-center mb-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Đơn vị tính</th>
+                        <th>Tổng tiền</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    @{decimal total = 0;}
+                    @if (Model.Count > 0)
+                    {
+                        foreach (var data in Model)
+                        {
+                            total += data.TotalPrice;
+                                <input type="hidden" name="@nameof(data.ProductID)" value="@data.ProductID" />
+                                <tr>
+                                    <td class="align-middle text-left"><img src="~/images/@(data.Photo == "" ? "nophoto.jpg" : data.Photo)" alt="" style="width: 50px;">@data.ProductName</td>
+                                    <td class="align-middle">@data.SalePrice.ToString("N0")</td>
+                                    <td class="align-middle">
+                                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                            <a href="~/Cart/AddToCart?id=@data.ProductID&quantity=-1" class="btn btn-sm btn-primary btn-minus">
+                                                    <i class="fa fa-minus"></i>
+                                                </a>
+                                            </div>
+                                        <input type="text" disabled class="form-control form-control-sm bg-secondary border-0 text-center" value="@data.Quantity">
+                                            <div class="input-group-btn">
+                                            <a href="~/Cart/AddToCart/@data.ProductID" type="button" class="btn btn-sm btn-primary btn-plus">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        @data.Unit
+                                    </td>
+                                    <td class="align-middle">@data.TotalPrice.ToString("N0")</td>
+                                    <td class="align-middle">
+                                        <a href="javascript:void(0);" 
+                                           class="btn btn-danger" 
+                                           data-bs-toggle="modal" 
+                                           data-bs-target="#deleteItemModal" 
+                                           data-product-id="@data.ProductID" 
+                                           data-product-name="@data.ProductName" 
+                                           onclick="updateModal(this)">
+                                           <i class="fa fa-times"></i>
+                                        </a>
+                                </td>
+                                </tr>
+                        }
+                    }
+                    else
+                    {
+                    <td colspan="6">
+                        <span class="text-center">Không có đơn hàng trong giỏ</span>
+                    </td>
+                    }
+                </tbody>
+            </table>
+            @if(Model.Count>0)
+            {
+               <div class="d-flex justify-content-end mt-3">
+                    <a href="javascript:void(0);" 
+                    class="btn btn-danger" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#deleteCartModal" 
+                        onclick="deleteCartModal(this)">
+                    <i class="fa fa-trash"></i>
+                    Xóa giỏ hàng
+                    </a>
+               </div>
+            }
+        </div>
+        <div class="col-lg-4">
+            <form action="~/Cart/ComfirmOrder" method="get">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Xác nhận</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="pt-2">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5>Tổng tiền:</h5>
+                        <h5>@total.ToString("N0")</h5>
+                    </div>
+                        <div class="input-group mb-3 mt-3">
+                            <h5 class="input-group">Địa chỉ giao hàng:</h5>
+                                <input type="text" name="deliveryAddress" class="input-group form-control" placeholder="Nhập địa chỉ nhận hàng">
+                        </div>
+                        <h5 style="color:red"> @Html.ValidationMessage("Error")@Html.ValidationMessage("Error2")</h5>
+                        <h5 style="color:red"> </h5>
+                        <button class="btn btn-block btn-primary font-weight-bold mt-3 my-3 py-3">Đặt hàng</button>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteItemModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                <a class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></a>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa  <strong id="modalProductName"></strong> khỏi giỏ hàng không ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmDeleteBtn" class="btn btn-danger" href="#">Xóa</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteCartModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                <a class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i></a>
+            </div>
+            <div class="modal-body">
+                Bạn có muốn xóa toàn bộ giỏ hàng không ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmDeleteCart" class="btn btn-danger" href="#">Xóa</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+<script>
+    function updateModal(element) {
+        const productId = element.getAttribute("data-product-id");
+        const productName = element.getAttribute("data-product-name");
+        document.getElementById("modalProductName").textContent = productName;
+        const baseUrl = window.location.origin;
+        const deleteUrl = `${baseUrl}/Cart/RemoveFromCart/${productId}`;
+        document.getElementById("confirmDeleteBtn").setAttribute("href", deleteUrl);
+    }
+    function deleteCartModal(element) {
+        const baseUrl = window.location.origin;
+        const deleteUrl = `${baseUrl}/Cart/ClearCart`;
+        document.getElementById("confirmDeleteCart").setAttribute("href", deleteUrl);
+    }
+</script>
+}
+<!-- Cart End -->

@@ -1,0 +1,47 @@
+﻿@model SV21T1020123.DomainModels.Supplier
+
+<div class="box box-danger">
+    <div class="box-body">
+        <form action="~/Supplier/Delete/@Model.SupplierID" method="post">
+            <div class="form-group disabled">
+                <label>Tên nhà cung cấp:</label>
+                <p class="form-control-static form-control">@Model.SupplierName</p>
+            </div>
+
+            <div class="form-group">
+                <label>Tên giao dịch:</label>
+                <p class="form-control-static form-control">@Model.ContactName</p>
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ:</label>
+                <p class="form-control-static form-control">@Model.Address</p>
+            </div>
+
+            <div class="form-group">
+                <label>Tỉnh/thành:</label>
+                <p class="form-control-static form-control">@Model.Province</p>
+            </div>
+
+            <div class="form-group">
+                <label>Điện thoại:</label>
+                <p class="form-control-static form-control">@Model.Phone</p>
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <p class="form-control-static form-control">@Model.Email</p>
+            </div>
+
+            <div class="form-group">
+                @if (SV21T1020123.BusinessLayers.CommonDataService.InUsedSupllier(Model.SupplierID) == false)
+                {
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xóa dữ liệu
+                    </button>
+                }
+                <a href="~/Supplier" class="btn btn-default"> Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

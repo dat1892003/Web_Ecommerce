@@ -1,0 +1,126 @@
+﻿@model SV21T1020123.Shop.Models.ShopProductSearchInput
+@{
+    ViewBag.Title = "Cửa hàng";
+}
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <span class="breadcrumb-item active"><b>@ViewBag.Title</b></span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shop Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <!-- Shop Sidebar Start -->
+        <div class="col-lg-3 col-md-4">
+            <!-- Price Start -->
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Tìm kiếm sản phẩm</span></h5>
+            <div class="bg-light p-4 mb-30">
+                <form id="frmSearchInput" action="~/Shop/Search" method="get">
+                    <input hidden name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+                    <label class="input-group custom-control d-flex align-items-center justify-content-between" for="price-all"><strong>Tìm kiếm theo tên:</strong></label>
+                    <div class="input-group custom-control d-flex align-items-center justify-content-between mb-3">
+                        <input type="text" name="@nameof(Model.SearchValue)" class="form-control" placeholder="Nhập tên sản phẩm" value="@Model.SearchValue">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                    <label class="input-group custom-control d-flex align-items-center justify-content-between" for="price-all"><strong>Tìm kiếm theo loại hàng:</strong></label>
+                    <div class="custom-control d-flex align-items-center justify-content-between mb-3"> 
+                        <select name="@nameof(Model.CategoryID)" class="form-control">
+                            <option value="">--- Chọn loại hàng---</option>
+                            @foreach (var category in SV21T1020123.BusinessLayers.CommonDataService.ListOfCategories())
+                            {
+                                if (Model.CategoryID == category.CategoryID)
+                                {
+                                    <option selected="selected" value="@category.CategoryID">@category.CategoryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@category.CategoryID">@category.CategoryName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="input-group custom-control d-flex align-items-center justify-content-between" for="price-all"><strong>Tìm kiếm nhà cung cấp:</strong></label>
+                    <div class="custom-control d-flex align-items-center justify-content-between mb-3">
+                        <select name="@nameof(Model.SupplierID)" class="form-control">
+                            <option value="">--- Chọn nhà cung cấp ---</option>
+                            @foreach (var supplier in SV21T1020123.BusinessLayers.CommonDataService.ListOfSuppliers())
+                            {
+                                if (Model.SupplierID == supplier.SupplierID)
+                                {
+                                    <option selected="selected" value="@supplier.SupplierID">@supplier.SupplierName</option>
+                                }
+                                else
+                                {
+                                    <option value="@supplier.SupplierID">@supplier.SupplierName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="input-group custom-control d-flex align-items-center justify-content-between" for="price-all"><strong>Nhập giá tối thiểu:</strong></label>
+                    <div class="custom-control d-flex align-items-center justify-content-between mb-3">
+                        <input type="text" name="@nameof(Model.MinPrice)" class="number-sperator form-control" value="@Model.MinPrice.ToString("N0")">
+                    </div>
+                    <label class="input-group custom-control d-flex align-items-center justify-content-between" for="price-all"><strong>Nhập giá tối đa:</strong></label>
+                    <div class="custom-control d-flex align-items-center justify-content-between mb-3">
+                        <input type="text" name="@nameof(Model.MaxPrice)" class="number-sperator form-control" value="@Model.MaxPrice.ToString("N0")">
+                    </div>
+                </form>
+            </div>
+            <!-- Price End -->
+        </div>
+        <!-- Shop Sidebar End -->
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-8">
+            <div id="searchResult" class="row pb-3">
+
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
+@section scripts {
+    <script>
+        function doSearch(page) {
+            var searchConditon = $("#frmSearchInput").serializeArray();
+            searchConditon.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url : action,
+                type : method,
+                data : searchConditon,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function (){
+            doSearch(@Model.Page);
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+            $(".number-sperator").inputmask({
+                alias: "numeric",
+                groupSeparator: ",",
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true
+             });
+        });
+
+    </script>
+}

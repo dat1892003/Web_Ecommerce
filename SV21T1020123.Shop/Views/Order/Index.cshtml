@@ -1,0 +1,102 @@
+﻿@model SV21T1020123.Shop.Models.OrderSearchInput
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+}
+<div class="container-fluid bg-light">
+    <div class="row px-xl-5">
+        <span class="breadcrumb-item active mt-3"><b>@ViewBag.Title</b></span>
+    </div>
+</div>
+<div class="container-fluid bg-light">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+            <div class="container-fluid bg-light p-4">
+                <form id="frmSearchInput" action="~/Order/Search" method="get" class="row g-3">
+                    <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+                    <input type="hidden" name="@nameof(Model.CustomerId)" value="@Model.CustomerId" />
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label"><strong>Tìm kiếm theo trạng thái:</strong></label>
+                        <select name="@nameof(Model.Status)" class="form-control">
+                            <option value="0">--- Chọn trạng thái đơn hàng ---</option>
+                            @foreach (var data in SV21T1020123.BusinessLayers.CommonDataService.ListofOrderStatus())
+                            {
+                                if (data.Status == Model.Status)
+                                {
+                                    <option selected value="@data.Status">@data.Description</option>
+                                }
+                                else
+                                {
+                                    <option value="@data.Status">@data.Description</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="time-range" class="form-label"><strong>Chọn thời gian:</strong></label>
+                        <input type="text" name="@nameof(Model.TimeRange)" class="daterange-picker form-control"
+                               placeholder="dd/MM/yyyy - dd/MM/yyyy" value="@Model.TimeRange">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="search-name" class="form-label"><strong>Tìm kiếm theo tên:</strong></label>
+                        <div class="input-group">
+                            <input type="text" name="@nameof(Model.SearchValue)" class="form-control" placeholder="Nhập tên nhân viên hoặc tên người giao hàng" value="@Model.SearchValue">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--order Start-->
+<div class="container-fluid bg-light">
+    <div class="row px-xl-5">
+        <div id="searchResult" class="col-lg-12 table-responsive">
+
+        </div>
+        </div>    
+    </div>
+<!-- Order End -->
+@section scripts {
+    <script>
+        function doSearch(page) {
+            var searchConditon = $("#frmSearchInput").serializeArray();
+            searchConditon.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: searchConditon,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            doSearch(@Model.Page);
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+            $(".number-sperator").inputmask({
+                alias: "numeric",
+                groupSeparator: ",",
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true
+            });
+        });
+
+    </script>
+}

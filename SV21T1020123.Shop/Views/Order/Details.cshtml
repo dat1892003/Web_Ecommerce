@@ -1,0 +1,145 @@
+﻿@model SV21T1020123.Shop.Models.OrderDetailModel
+@{
+     ViewBag.Title = "Chi tiết đơn hàng";
+}
+
+<div class="card border-primary">
+    <div class="card-header text-end">
+        <div class="btn-group">
+            <a href="~/Order" class="btn btn-primary"><i class="fa fa-chevron-left 3x"></i> Quay lại</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Mã đơn hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext">@Model.Order.OrderID</p>
+            </div>
+            <label class="col-sm-2 col-form-label">Ngày lập đơn hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext">@Model.Order.OrderTime.ToString("dd/MM/yyyy HH:mm", new System.Globalization.CultureInfo("en-GB"))</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Nhân viên phụ trách:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext">@Model.Order.EmployeeName</p>
+            </div>
+            <label class="col-sm-2 col-form-label">Ngày nhận đơn hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.AcceptTime)</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Khách hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.CustomerName</p>
+            </div>
+            <label class="col-sm-2 col-form-label">Tên giao dịch:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.CustomerContactName</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Địa chỉ:</label>
+            <div class="col-sm-10 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.CustomerAddress</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Email:</label>
+            <div class="col-sm-10 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.CustomerEmail</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Địa chỉ giao hàng:</label>
+            <div class="col-sm-10 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.DeliveryAddress</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Tỉnh/thành:</label>
+            <div class="col-sm-10 border p-1">
+                <p class="form-control-plaintext">@Model.Order.DeliveryProvince</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Người giao hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.ShipperName</p>
+            </div>
+            <label class="col-sm-2 col-form-label">Điện thoại:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.ShipperPhone</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Nhận giao hàng lúc:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.ShippedTime)</p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Trạng thái đơn hàng:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@Model.Order.StatusDescription</p>
+            </div>
+            <label class="col-sm-2 col-form-label">Thời điểm hoàn tất:</label>
+            <div class="col-sm-4 border p-1">
+                <p class="form-control-plaintext ">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.FinishedTime)</p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <h4>Danh sách mặt hàng thuộc đơn hàng</h4>
+                <thead>
+                    <tr class="table-primary">
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Tên hàng</th>
+                        <th class="text-center">ĐVT</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-center">Giá</th>
+                        <th class="text-center">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        decimal total = 0;
+                        int i = 1;
+                    }
+                    @foreach (var item in Model.Details)
+                    {
+                        <tr>
+                            <td class="text-center">@i</td>
+                            <td>@item.ProductName</td>
+                            <td class="text-center">@item.Unit</td>
+                            <td class="text-center">@item.Quantity</td>
+                            <td class="text-end">@item.SalePrice.ToString("N0")</td>
+                            <td class="text-end">@item.TotalPrice.ToString("N0")</td>
+                        </tr>
+                        i++;
+                        total += item.TotalPrice;
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-end">Tổng cộng:</th>
+                        <th class="text-end">@total.ToString("N0")</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+

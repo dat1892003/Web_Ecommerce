@@ -1,0 +1,62 @@
+﻿@model SV21T1020123.DomainModels.Customer
+@{
+    ViewBag.Title = "Đăng ký khách hàng";
+}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-6">
+        <form action="~/Account/Save" method="post" class="shadow p-4 bg-white rounded mt-5 mb-5">
+            <h4 class="d-flex justify-content-center align-items-center">Đăng ký</h4>
+            <div class="form-group">
+                <label><strong>Tên khách hàng:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.CustomerName)" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.CustomerName))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Tên giao dịch:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.ContactName)"/>
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.ContactName))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Điện thoại:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.Phone)"/>
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Phone))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Email(Tài khoản):</strong></label>
+                <input type="email" class="form-control" name="@nameof(Model.Email)" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Email))</span>
+            </div>
+            <div class="form-group">
+                <label><strong>Mật khẩu:</strong></label>
+                <input type="password" class="form-control" name="@nameof(Model.Password)" />
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Password))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Địa chỉ:</strong></label>
+                <input type="text" class="form-control" name="@nameof(Model.Address)"/>
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Address))</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Tỉnh/thành:</strong></label>
+                <select class="form-control" name="@nameof(Model.Province)">
+                    <option value="">---Chọn tỉnh thành---</option>
+                    @foreach (var province in SV21T1020123.BusinessLayers.CommonDataService.ListofProvinces())
+                    {
+                            <option value="@province.ProvinceName">@province.ProvinceName</option>
+                    }
+                </select>
+                <span style="color: red">@Html.ValidationMessage(nameof(Model.Province))</span>
+            </div>
+            <span style="color: red">@Html.ValidationMessage("Error")</span>
+            <button type="submit" class="btn btn-primary w-100"><strong>Đăng ký</strong></button>
+            <div class="mt-3 text-center">
+                <span>Đã có tài khoản? <a class="primary" href="~/Account/Login">Đăng nhập</a></span>
+            </div>
+        </form>
+    </div>
+</div>

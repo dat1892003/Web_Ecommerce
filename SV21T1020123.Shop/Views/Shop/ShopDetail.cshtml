@@ -1,0 +1,72 @@
+﻿@model SV21T1020123.DomainModels.Product
+@{
+    //ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+<!-- Shop Detail Start -->
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-1 mb-30">
+            <a href="~/Shop"><i class="fa fa-chevron-left fa-3x table-bordered bg-light"></i></a>
+        </div>
+        <div class="col-lg-5 mb-30">
+            <img class="mx-auto d-block" src="~/images/@(Model.Photo != "" ? Model.Photo :"nophoto.jpg")" alt="nophoto" />
+        </div>
+
+        <div class="col-lg-6 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <p class="col-form-label-lg"><strong>Tên sản phẩm:</strong> @Model.ProductName</p>
+                <p class="col-form-label-lg"><strong>Giá bán:</strong> @Model.Price.ToString("N0") Đ</p>
+                <p class="col-form-label-lg"><strong>Đơn vị tính:</strong> @Model.Unit</p>
+                <p class="col-form-label-lg"><strong>Nhà cung cấp:</strong> @SV21T1020123.BusinessLayers.CommonDataService.GetSupplier(Model.SupplierID).SupplierName</p>
+                <p class="col-form-label-lg"><strong>Loại hàng:</strong> @SV21T1020123.BusinessLayers.CommonDataService.GetCategory(Model.CategoryID).CategoryName</p>
+                <form action="~/Cart/AddToCart" method="get">
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <input type="hidden" name="id" value="@Model.ProductID" />
+                        @if (Model.IsSelling)
+                        {
+                            <div class="input-group quantity mr-3" style="width: 130px;">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary btn-minus">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="number" required min="1" name="quantity" class="form-control bg-secondary border-0 text-center" value="1">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary btn-plus">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary px-3">
+                                <i class="fa fa-shopping-cart mr-1"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                        } 
+                        else
+                        {
+                        <h5 style="color: red" >Mặt hàng đã ngừng kinh doanh</h5>   
+                        }
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="bg-light p-30">
+                <div class="nav nav-tabs mb-4">
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Thông tin sản phẩm</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <h4 class="mb-3">Thông tin sản phẩm</h4>
+                        <p>@Model.ProductDescription</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
